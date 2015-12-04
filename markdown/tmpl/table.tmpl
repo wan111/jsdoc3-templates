@@ -1,0 +1,55 @@
+<?js
+/*
+example:
+
+| name | type            | argument | default | description  |
+|------|-----------------|----------|---------|--------------|
+| hoge | string          | optional | hoga    | hogehogehoge |
+| fuga | string,number   |          |         | fugafuga     |
+
+data = 
+[
+	["name", "type", "argument", "default", "description"],
+	["hoge", "string", "optional", "hoga", "hogehogehoge"],
+	["fuga", "string,number", "", null, "fugafuga"]
+];
+*/
+function buildRow(row, pad){
+	var v, strLen, max,
+		array = [],
+		len = row.length;
+	for(var i = 0; i < len; i++){
+		v = row[i] || "";
+		v = v.replace(/\|/g, "\\|");
+		strLen = self.strLength(v);
+		max = max_lengs[i];
+		array[i] = v + (strLen < max ? Array(max - strLen + 1).join(pad) : "");
+	}
+	return "|" + pad + array.join(pad + "|" + pad) + pad + "|\n";
+}
+
+var self = this,
+	println = self.println(print, "   "),
+	rows = data.length,
+	cols = data[0].length,
+	table = new Array(rows),
+	max_lengs = new Array(cols),
+	v;
+
+data.forEach(function(elem, index){
+	var arr = [];
+	for(var i = 0; i < cols; i++){
+		v = (elem[i] || "").replace(/\|/g, "\\|").replace(/[\n\r]/g, "<br>");
+		arr[i] = v;
+		max_lengs[i] = Math.max(self.strLength(v), max_lengs[i] || 0);
+	}
+	table[index] = arr;
+});
+
+print(buildRow(table[0], " "));
+print(buildRow(Array(cols), "-"));
+for(var i = 1; i < rows; i++){
+	print(buildRow(table[i], " "));
+}
+
+?>

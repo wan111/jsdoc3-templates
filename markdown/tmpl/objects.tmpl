@@ -1,0 +1,143 @@
+<?js
+/*
+if(constructor){
+className
+---------
+
+* new className(params)  
+   description
+
+   * Parameters:  
+      * paramName {type} (optional,nullable,repeatable,default:) description
+
+   * Returns:  
+      * {type} description
+
+   * Example:  
+
+      ```
+      example code
+      ```
+}else if(object){
+objectName
+--------------
+description
+
+* Example:
+
+   ```
+   example code
+   ```
+}
+* Members:  
+   * memberName : {type}  (default=)  
+      description
+
+* Methods:  
+   * methodName1(params) : {type}  
+      description
+
+      * Parameters:  
+
+        * paramName {type} (optional,nullable,repeatable,default:) description
+
+      * Returns:  
+
+        * {type} description
+
+      * Example:
+
+        ```
+        example code
+        ```
+*/
+
+var self = this;
+var captions = self.captions;
+var println = self.println(print, "   ");
+
+if(kind == 'globals'){
+	var members = data.filter(function(obj){
+		return obj.kind == 'member' || obj.kind == 'constant';
+	});
+	var methods = data.filter(function(obj){
+		return obj.kind == 'function';
+	});
+	var events = data.filter(function(obj){
+		return obj.kind == 'event';
+	});
+	if(members.length){
+		print("\n");
+		println("* " + captions.members, indent);
+		members.forEach(function(member){
+			print("\n");
+			print(self.partial('member.tmpl', {indent: indent + 1, data: member}));
+		});
+	}
+	if(methods.length){
+		print("\n");
+		println("* " + captions.methods, indent);
+		methods.forEach(function(method){
+			print("\n");
+			print(self.partial('func.tmpl', {indent: indent + 1, data: method}));
+		});
+	}
+	if(events.length){
+		print("\n");
+		println("* " + captions.events. indent);
+		events.forEach(function(event){
+			print("\n");
+			print(self.partial("func.tmpl", {indent: indent + 1, data: event}));
+		});
+	}
+}else{
+	data.forEach(function(obj, index){
+		if(index) print("\n");
+		println(obj.name, indent);
+		println(Array(self.strLength(obj.name) + 1).join("-"), indent);
+
+		if(obj.meta.code.type == 'function'){
+			print("\n");
+			print(self.partial('func.tmpl', {indent: indent + 1, data: obj}));
+		}else{
+			if(obj.description){
+				println(obj.description, indent);
+			}
+			if(obj.examples){
+				print("\n");
+				print(self.partial('examples.tmpl', {indent: indent + 1, data: obj.examples}));
+			}
+		}
+
+		if(obj.members.length){
+			print("\n");
+			println("* " + captions.members + "  ", indent + 1);
+			obj.members.forEach(function(member){
+				print("\n");
+				print(self.partial('member.tmpl', {indent: indent + 2, data: member}));
+			});
+		}
+		if(obj.methods.length){
+			print("\n");
+			println("* " + captions.methods + "  ", indent + 1);
+			obj.methods.forEach(function(method){
+				print("\n");
+				print(self.partial('func.tmpl', {indent: indent + 2, data: method}));
+			});
+		}
+		if(obj.events.length){
+			print("\n");
+			println("* " + captions.events + "  ", indent + 1);
+			obj.events.forEach(function(event){
+				print("\n");
+				print(self.partial("func.tmpl", {indent: indent + 2, data: event}));
+			});
+		}
+		if(obj.mixes && obj.mixes.length){
+			print("\n");
+			println("* " + captions.mixesin + "  ", indent + 1);
+			println("* " + obj.mixes.join("\n* "), indent + 2);
+		}
+	});
+}
+?>

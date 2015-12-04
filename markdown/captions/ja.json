@@ -1,0 +1,30 @@
+{
+	"classes": "クラス:",
+	"externals": "Externals:",
+	"events": "イベント:",
+	"globals": "Globals:",
+	"mixins": "Mixins:",
+	"modules": "モジュール:",
+	"namespaces": "名前空間:",
+	"members": "メンバー:",
+	"methods": "メソッド:",
+	"parameters": "パラメータ:",
+	"returns": "戻り値:",
+	"examples": "使用例:",
+	"mixesin": "Mixes In:",
+	"description": "説明:",
+	"changeLog": "変更履歴:",
+	"constant": "定数",
+	"optional": "省略可",
+	"default_": "既定値:",
+	"param": {
+		"name": "名前",
+		"type": "型",
+		"argument": "引数",
+		"default_": "既定値",
+		"optional": "省略可",
+		"nullable": "null許容",
+		"variable": "可変長",
+		"description": "説明"
+	}
+}

@@ -1,0 +1,55 @@
+<?js
+/*
+* Parameters:  
+   | name       | type       | argument        | default       | description      |
+   |------------|------------|-----------------|---------------|------------------|
+   | param name | param type | optional        | default value | param descripton |
+                               repeatable
+                               nullable
+*/
+var self = this,
+	captions = self.captions,
+	println = self.println(print, "   "),
+	caps = captions.param,
+	isArg = false,
+	isDef = false,
+	elems = [],
+	opts = [],
+	table = [];
+
+println("* " + captions.parameters, indent);
+print("\n");
+
+data.forEach(function(param){
+	if(param.optional || param.nullable || param.variable) isArg = true;
+	if(param.defaultvalue) isDef = true;
+});
+
+elems.push(caps.name);
+elems.push(caps.type);
+if(isArg) elems.push(caps.argument);
+if(isDef) elems.push(caps.default_);
+elems.push(caps.description);
+table.push(elems);
+
+data.forEach(function(param){
+	elems = [];
+	elems.push(param.name);
+	elems.push(param.type.names.join(","));
+	if(isArg){
+		opts = [];
+		if(param.optional) opts.push(caps.optional);
+		if(param.nullable) opts.push(caps.nullable);
+		if(param.variable) opts.push(caps.variable);
+		elems.push(opts.join("<br>"));
+	}
+	if(isDef){
+		elems.push(param.defaultvalue ? param.defaultvalue : "");
+	}
+	elems.push(param.description ? param.description : "");
+	
+	table.push(elems);
+});
+
+println(self.partial("table.tmpl", {data: table}), indent);
+?>

@@ -1,0 +1,61 @@
+<?js
+/*
+* name(params) : {type}  
+  new name(params)  
+    description
+
+    * Parameters:  
+
+       * paramName {type} (optional,nullable,repeatable,default:) description
+
+    * Returns:  
+
+       * {type} description
+
+    * Example:  
+
+       ```
+       code
+       ```
+*/
+
+var self = this;
+var captions = self.captions;
+var println = self.println(print, "   ");
+
+var paramnames = [];
+if(data.params){
+	data.params.forEach(function(param){
+		paramnames.push(param.name);
+	});
+}
+
+if(data.kind == 'class'){
+	println("* new " + data.name + "(" + paramnames.join(", ") + ")" + "  ", indent);
+}else{
+	var types = [];
+	if(data.returns) data.returns.forEach(function(ret){types.push("{" + ret.type.names.join("|") + "}")});
+	println("* " + data.name + "(" + paramnames.join(", ") + ")" + (types.length ? ' -> ' + types.join(", ") : '') + "  ", indent);
+}
+
+if(data.description){
+	println(data.description, indent + 1);
+}
+
+if(data.params){
+	print("\n");
+	//print(self.partial('params_list.tmpl', {indent: indent + 1, data: data.params}));
+	print(self.partial('params_table.tmpl', {indent: indent + 1, data: data.params}));
+}
+
+if(data.returns){
+	print("\n");
+	print(self.partial('returns.tmpl', {indent: indent + 1, data: data.returns}));
+}
+
+
+if(data.examples){
+	print("\n");
+	print(self.partial('examples.tmpl', {indent: indent + 1, data: data.examples}));
+}
+?>

@@ -1,0 +1,25 @@
+<?js
+/*
+* Parameters:  
+
+   * paramName {type} (optional,nullable,repeatable,default:) description
+*/
+var self = this;
+var captions = self.captions;
+var println = self.println(print, "   ", indent);
+var opts = [];
+
+println("* " + captions.parameters + "  ", indent);
+data.forEach(function(param){
+	opts = [];
+	if(param.optional) opts.push(captions.param.optional);
+	if(param.nullable) opts.push(captions.param.nullable);
+	if(param.variable) opts.push(captions.param.variable);
+	if(param.defaultvalue) opts.push(captions.default_ + param.defaultvalue);
+
+	print("\n");
+	println("* " + param.name + " : {" +param.type.names.join("|") + "}" +
+	        (opts.length ? "  (" + opts.join(", ") + ")" : "") +
+	        (param.description ? "  " + param.description : ""), indent + 1);
+});
+?>

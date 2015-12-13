@@ -55,7 +55,7 @@ Test.prototype.fuga = "a";
 Test.prototype.hoge = function(a, var_args){};
 ```
 
-### markdown document:
+### ↓ markdown document:
 
 ***********************************************
 
@@ -65,34 +65,36 @@ Classes:
 Test
 ----
 
-   * new Test(a, b)  
-      test test
+* new Test(a, b)  
+   test test
 
-      * Parameters:
+   * Parameters:
 
-      | Name | Type          | Description |
-      |------|---------------|-------------|
-      | a    | string        | abcdefg     |
-      | b    | number,string |             |
-      
+   | Name | Type          | Description |
+   |------|---------------|-------------|
+   | a    | string        | abcdefg     |
+   | b    | number,string |             |
+   
 
-      * Examples:  
+   * Examples:  
 
-         ```
-         var t = new Test("abc", 123);
-         var r = t.dayo();
-         ```  
+      ```
+      var t = new Test("abc", 123);
+      var r = t.dayo();
+      ```  
 
    * Members:  
 
-      * (constant) NAME : {string|number}  
+      * < constant > NAME : {string|number}  
          name  
 
-      * fuga : {string}  (default:"a")  
+      * fuga : {string}  
+
+         * Default: "a"  
 
    * Methods:  
 
-      * hoge(a, var_args) -> {boolean}  
+      * hoge(a, var_args) → {boolean}  
          hogehoge method
 
          * Parameters:

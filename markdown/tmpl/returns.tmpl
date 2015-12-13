@@ -8,7 +8,7 @@ var self = this;
 var captions = self.captions;
 var println = self.println(print, "   ");
 
-println("* " + captions.returns + "   ", indent);
+println("* " + captions["returns"] + "   ", indent);
 data.forEach(function(ret){
 	print("\n");
 	println("* {" + ret.type.names.join("|") + "}" + (ret.description ? " : " + ret.description : ""), indent + 1);

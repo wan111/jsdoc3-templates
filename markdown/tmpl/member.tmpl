@@ -1,7 +1,9 @@
 <?js
 /*
-* name : {type}  (default=)  
+* < attributes > name : {type}  
    description
+
+   * details
 
    * Example:  
 
@@ -10,19 +12,25 @@
       ```
 */
 var self = this;
-var captions = self.captions;
-var println = self.println(print, "   ");
+	captions = self.captions,
+	println = self.println(print, "   "),
+	types = "",
+	details = "";
 
-var types = "";
-var defaultvalue = "";
 if(data.type && data.type.names){
 	types = " : {" + data.type.names.join("|") + "}";
 }
-if(data.defaultvalue) defaultvalue = "  (" + captions.default_ + data.defaultvalue + ")";
 
-println("* " + (data.kind != 'member' ? "(" + captions[data.kind] +") " : "") + data.name + types + defaultvalue + "  ", indent);
+println("* " + (self.partial("attributes.tmpl", {data: data})) + data.name + types + "  ", indent);
 
 if(data.description) println(data.description + "  ", indent + 1);
+
+details = self.partial("details.tmpl", {indent: indent + 1, data: data});
+if(details){
+	print("\n");
+	print(details);
+}
+
 if(data.examples){
 	print("\n");
 	print(self.partial("examples.tmpl", {indent: indent+1, data: data.examples}));

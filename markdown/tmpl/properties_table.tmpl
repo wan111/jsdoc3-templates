@@ -1,9 +1,9 @@
 <?js
 /*
-* Parameters:  
+* Properties:  
    | name       | type       | argument        | default       | description      |
    |------------|------------|-----------------|---------------|------------------|
-   | param name | param type | optional        | default value | param descripton |
+   | prop name  | prop type  | optional        | default value | prop  descripton |
                                repeatable
                                nullable
 */
@@ -17,12 +17,12 @@ var self = this,
 	opts = [],
 	table = [];
 
-println("* " + captions["parameters"], indent);
+println("* " + captions["properties"], indent);
 print("\n");
 
-data.forEach(function(param){
-	if(param.optional || param.nullable || param.variable) isArg = true;
-	if(param.defaultvalue) isDef = true;
+data.forEach(function(prop){
+	if(prop.optional || prop.nullable || prop.variable) isArg = true;
+	if(prop.defaultvalue) isDef = true;
 });
 
 elems.push(caps["name"]);
@@ -32,24 +32,26 @@ if(isDef) elems.push(caps["default"]);
 elems.push(caps["description"]);
 table.push(elems);
 
-data.forEach(function(param){
+data.forEach(function(prop){
 	elems = [];
-	elems.push(param.name);
-	elems.push(param.type.names.join(","));
+	elems.push(prop.name);
+	elems.push(prop.type.names.join(","));
 	if(isArg){
 		opts = [];
-		if(param.optional) opts.push(caps["optional"]);
-		if(param.nullable) opts.push(caps["nullable"]);
-		if(param.variable) opts.push(caps["variable"]);
+		if(prop.optional) opts.push(caps["optional"]);
+		if(prop.nullable) opts.push(caps["nullable"]);
+		if(prop.variable) opts.push(caps["variable"]);
 		elems.push(opts.join("<br>"));
 	}
 	if(isDef){
-		elems.push(param.defaultvalue ? param.defaultvalue : "");
+		elems.push(prop.defaultvalue ? prop.defaultvalue : "");
 	}
-	elems.push(param.description ? param.description : "");
+	elems.push(prop.description ? prop.description : "");
 	
 	table.push(elems);
 });
 
 println(self.partial("table.tmpl", {data: table}), indent);
+
+
 ?>

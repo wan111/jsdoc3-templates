@@ -20,6 +20,7 @@ var template = require('jsdoc/template'),
 	taffy = require('taffydb').taffy,
 	helper = require('jsdoc/util/templateHelper'),
 	_ = require('underscore'),
+	replaceInlineTags = require('jsdoc/tag/inline').replaceInlineTags,
 	filename = 'readme.md',
 	title = '',
 	db,
@@ -28,12 +29,14 @@ var template = require('jsdoc/template'),
 	captions = {},
 	def_captions = {
 		"classes": "Classes:",
+		"extends": "Extends:",
 		"externals": "Externals:",
 		"events": "Events:",
 		"globals": "Globals:",
 		"mixins": "Mixins:",
 		"modules": "Modules:",
 		"namespaces": "Namespaces:",
+		"properties": "Properties:",
 		"members": "Members:",
 		"methods": "Methods:",
 		"parameters": "Parameters:",
@@ -44,12 +47,29 @@ var template = require('jsdoc/template'),
 		"changeLog": "ChangeLog:",
 		"constant": "constant",
 		"optional": "optional",
-		"default_": "default:",
+		"default": "Default:",
+		"version": "Version:",
+		"since": "Since:",
+		"inheridFrom": "Inherid From:",
+		"deprecated": "Deprecated:",
+		"author": "Author:",
+		"copyright": "Copyright:",
+		"license": "License:",
+		"see": "See:",
+		"attributes": {
+			"private": "private",
+			"protected": "protected",
+			"static": "static",
+			"inner": "inner",
+			"constant": "constant",
+			"virtual": "abstract",
+			"readonly": "readonly"
+		},
 		"param": {
 			"name": "Name",
 			"type": "Type",
 			"argument": "Argument",
-			"default_": "Default",
+			"default": "Default",
 			"optional": "optional",
 			"nullable": "nullable",
 			"variable": "repeatable",
@@ -65,7 +85,7 @@ var template = require('jsdoc/template'),
  */
 exports.publish = function(taffyData, opts, tutorials) {
 	db = taffyData;
-
+//dump(db().get());
 
 	db({undocumented: true}).remove();
 	db({ignore: true}).remove();
@@ -96,20 +116,33 @@ exports.publish = function(taffyData, opts, tutorials) {
 		}
 	}
 
+
 	var members = helper.getMembers(db);
+
+	function addAttribs(d){
+		d.attribs =  helper.getAttribs(d);
+	}
 
 	var obj, len;
 	for(var kind in members){
-		if(kind == 'classes' || kind == 'modules' || kind == 'mixins' || kind == 'namespaces'){
+		if(kind == 'classes' || kind == 'namespaces' || kind == 'modules' || kind == 'externals' || kind == 'mixins'){
 			len = members[kind].length;
 			for(var i = 0; i < len; i++){
 				obj = members[kind][i];
+				obj.attribs = helper.getAttribs(obj);
 				obj.members = db({kind: ['member', 'constant'], memberof: obj.longname}).get();
 				obj.methods = db({kind: 'function', memberof: obj.longname}).get();
 				obj.events = db({kind: 'event', memberof: obj.longname}).get();
+				
+				obj.members.forEach(addAttribs);
+				obj.methods.forEach(addAttribs);
+				obj.events.forEach(addAttribs);
 			}
 		}
 	}
+
+	members.globals.forEach(addAttribs);
+
 	/*
 	{
 		classes: [
@@ -148,6 +181,21 @@ exports.publish = function(taffyData, opts, tutorials) {
 	})();
 
 	var md = tmpl.render('markdown.tmpl', {title: title, data: members});
+
+	function processLink(str, tagInfo){
+		var text = tagInfo.text.replace(/^([^\s|]+)\s*\|?\s*(.*)$/, function(a, link, str){
+			return str ? "["+ str + "](" + link + ")" : link;
+		});
+		return str.replace(tagInfo.completeTag, text);
+	}
+
+	var replacers = {
+		link: processLink,
+		linkcode: processLink,
+		linkplain: processLink,
+		tutorial: processLink
+	}
+	md = replaceInlineTags(md, replacers).newString;
 
 	var outpath = path.join(outdir, filename);
 	fs.writeFileSync(outpath, md, 'utf8');

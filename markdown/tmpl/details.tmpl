@@ -1,0 +1,45 @@
+<?js
+/*
+* Default: 
+* Version: 
+* Since: 
+* Inherid From: 
+* Deprecated: 
+* Author: 
+* Copyright: 
+* License: 
+* See: 
+* Properties: 
+*/
+
+var self = this,
+	caps = self.captions,
+	println = self.println(print, "   ");
+
+if(data.defaultvalue) println("* " + caps["default"] + " " + data.defaultvalue + "  ", indent);
+if(data.version) println("* " + caps["version"] + " " + data.version + "  ", indent);
+if(data.since) println("* " + caps["since"] + " " + data.since + "  ", indent);
+if(data.inherited && data.inherits) println("* " + caps["inheridFrom"] + " " + data.inherits + "  ", indent);
+if(data.deprecated) println("* " + caps["deprecated"] + " " + data.deprecated + "  ", indent);
+if(data.author && data.author.length){
+	if(data.author.length == 1){
+		println("* " + caps["author"] + " " + data.author[0] + "  ", indent);
+	}else{
+		println("* " + caps["author"] + "  ", indent);
+		println("* " + data.author.join("\n* "), indent + 1);
+	}
+}
+if(data.copyright) println("* " + caps["copyright"] + " " + data.copyright + "  ", indent);
+if(data.license) println("* " + caps["license"] + " " + data.license + "  ", indent);
+if(data.see && data.see.length){
+	if(data.see.length == 1){
+		println("* " + caps["see"] + " " + data.see[0] + "  ", indent);
+	}else{
+		println("* " + caps["see"] + " ", indent);
+		println("* " + data.see.join("\n* "), indent + 1);
+	}
+}
+if(data.properties && data.properties.length){
+	print(self.partial("properties_table.tmpl", {indent: indent, data: data.properties}));
+}
+?>

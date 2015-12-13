@@ -4,11 +4,17 @@ if(constructor){
 className
 ---------
 
-* new className(params)  
+* < attributes > new className(params)  
    description
 
+   * details
+
    * Parameters:  
-      * paramName {type} (optional,nullable,repeatable,default:) description
+      | name       | type       | argument        | default       | description      |
+      |------------|------------|-----------------|---------------|------------------|
+      | param name | param type | optional        | default value | param descripton |
+                                  repeatable
+                                  nullable
 
    * Returns:  
       * {type} description
@@ -23,23 +29,32 @@ objectName
 --------------
 description
 
-* Example:
-
-   ```
-   example code
-   ```
+   * details
+   
+   * Example:
+   
+      ```
+      example code
+      ```
 }
 * Members:  
-   * memberName : {type}  (default=)  
+   * < attributes > memberName : {type}  
       description
+
+      * details
 
 * Methods:  
-   * methodName1(params) : {type}  
+   * < attributes > methodName1(params) : {type}  
       description
 
-      * Parameters:  
+      * details
 
-        * paramName {type} (optional,nullable,repeatable,default:) description
+      * Parameters:  
+         | name       | type       | argument        | default       | description      |
+         |------------|------------|-----------------|---------------|------------------|
+         | param name | param type | optional        | default value | param descripton |
+                                     repeatable
+                                     nullable
 
       * Returns:  
 
@@ -52,9 +67,10 @@ description
         ```
 */
 
-var self = this;
-var captions = self.captions;
-var println = self.println(print, "   ");
+var self = this,
+	captions = self.captions,
+	println = self.println(print, "   "),
+	details = "";
 
 if(kind == 'globals'){
 	var members = data.filter(function(obj){
@@ -68,7 +84,7 @@ if(kind == 'globals'){
 	});
 	if(members.length){
 		print("\n");
-		println("* " + captions.members, indent);
+		println("* " + captions["members"], indent);
 		members.forEach(function(member){
 			print("\n");
 			print(self.partial('member.tmpl', {indent: indent + 1, data: member}));
@@ -76,7 +92,7 @@ if(kind == 'globals'){
 	}
 	if(methods.length){
 		print("\n");
-		println("* " + captions.methods, indent);
+		println("* " + captions["methods"], indent);
 		methods.forEach(function(method){
 			print("\n");
 			print(self.partial('func.tmpl', {indent: indent + 1, data: method}));
@@ -84,7 +100,7 @@ if(kind == 'globals'){
 	}
 	if(events.length){
 		print("\n");
-		println("* " + captions.events. indent);
+		println("* " + captions["events"]. indent);
 		events.forEach(function(event){
 			print("\n");
 			print(self.partial("func.tmpl", {indent: indent + 1, data: event}));
@@ -96,12 +112,17 @@ if(kind == 'globals'){
 		println(obj.name, indent);
 		println(Array(self.strLength(obj.name) + 1).join("-"), indent);
 
-		if(obj.meta.code.type == 'function'){
+		if(obj.kind == 'class'){
 			print("\n");
-			print(self.partial('func.tmpl', {indent: indent + 1, data: obj}));
+			print(self.partial('func.tmpl', {indent: indent, data: obj}));
 		}else{
 			if(obj.description){
 				println(obj.description, indent);
+			}
+			details = self.partial("details.tmpl", {indent: indent + 1, data: obj});
+			if(details){
+				print("\n");
+				print(details);
 			}
 			if(obj.examples){
 				print("\n");
@@ -109,25 +130,30 @@ if(kind == 'globals'){
 			}
 		}
 
-		if(obj.members.length){
+		if(obj.augments && obj.augments.length){
 			print("\n");
-			println("* " + captions.members + "  ", indent + 1);
+			println("* " + captions["extends"] + "  ", indent + 1);
+			println("* " + obj.augments.join("\n* "), indent + 2);
+		}
+		if(obj.members && obj.members.length){
+			print("\n");
+			println("* " + captions["members"] + "  ", indent + 1);
 			obj.members.forEach(function(member){
 				print("\n");
 				print(self.partial('member.tmpl', {indent: indent + 2, data: member}));
 			});
 		}
-		if(obj.methods.length){
+		if(obj.methods && obj.methods.length){
 			print("\n");
-			println("* " + captions.methods + "  ", indent + 1);
+			println("* " + captions["methods"] + "  ", indent + 1);
 			obj.methods.forEach(function(method){
 				print("\n");
 				print(self.partial('func.tmpl', {indent: indent + 2, data: method}));
 			});
 		}
-		if(obj.events.length){
+		if(obj.events && obj.events.length){
 			print("\n");
-			println("* " + captions.events + "  ", indent + 1);
+			println("* " + captions["events"] + "  ", indent + 1);
 			obj.events.forEach(function(event){
 				print("\n");
 				print(self.partial("func.tmpl", {indent: indent + 2, data: event}));
@@ -135,7 +161,7 @@ if(kind == 'globals'){
 		}
 		if(obj.mixes && obj.mixes.length){
 			print("\n");
-			println("* " + captions.mixesin + "  ", indent + 1);
+			println("* " + captions["mixesin"] + "  ", indent + 1);
 			println("* " + obj.mixes.join("\n* "), indent + 2);
 		}
 	});

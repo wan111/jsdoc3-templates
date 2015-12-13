@@ -1,0 +1,13 @@
+<?js
+// < private, protected, static, inner, constant, abstract, readonly >
+var self = this,
+	captions = self.captions["attributes"],
+	attribs = [];
+
+if(data.attribs && data.attribs.length){
+	data.attribs.forEach(function(attrib){
+		attribs.push(captions[attrib]);
+	});
+	print("< " + attribs.join(", ") + " > ");
+}
+?>

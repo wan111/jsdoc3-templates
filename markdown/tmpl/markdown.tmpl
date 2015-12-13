@@ -14,13 +14,18 @@ if(constructor){
 className
 ---------
 
-* new className(params)  
+* < attributes > new className(params)  
    description
 
+   * details
+
    * Parameters:  
-
-      * paramName {type} (optional,nullable,repeatable,default:) description
-
+      | name       | type       | argument        | default       | description      |
+      |------------|------------|-----------------|---------------|------------------|
+      | param name | param type | optional        | default value | param descripton |
+                                  repeatable
+                                  nullable
+   
    * Returns:  
 
       * {type} description
@@ -34,18 +39,27 @@ className
 objectName
 --------------
 description
+
+* details
 }
 * Members:  
-   * memberName : {type}  (default=)  
+   * < attributes > memberName : {type}  
       description
+
+      * details
 
 * Methods:  
-   * methodName1(params) : {type}  
+   * < attributes > methodName1(params) : {type}  
       description
 
-      * Parameters:  
+      * details
 
-        * paramName {type} (optional,nullable,repeatable,default:) description
+      * Parameters:  
+         | name       | type       | argument        | default       | description      |
+         |------------|------------|-----------------|---------------|------------------|
+         | param name | param type | optional        | default value | param descripton |
+                                     repeatable
+                                     nullable
 
       * Returns:  
 
@@ -61,9 +75,11 @@ ChangeLog
 =========
 */
 
-var self = this;
-var captions = self.captions;
-var println = self.println(print, "   ");
+var self = this,
+	captions = self.captions,
+	println = self.println(print, "   "),
+	kinds = ["externals", "globals", "namespaces", "classes", "mixins", "modules"],
+	kind = "";
 
 if(title){
 	println(title, 0);
@@ -71,23 +87,22 @@ if(title){
 	print("\n");
 }
 
-for(var kind in data){
-	if(data[kind] && data[kind].length &&
-	   (kind == 'classes' || kind == 'namespaces' || kind == 'globals' || kind == 'mixins')){
-		//種類ごとに見出し作成
+for(var i = 0; i < kinds.length; i++){
+	kind = kinds[i];
+	if(data[kind] && data[kind].length){
+		//header
 		var caption = captions[kind] || kind
 		println(caption, 0);
 		println(Array(self.strLength(caption) + 1).join('='), 0);
 		if(kind != 'globals') print("\n");
 
-		//全てのオブジェクトを出力
 		print(self.partial('objects.tmpl', {indent: 0, kind: kind, data: data[kind]}));
 		print("\n");
 	}
 }
 
-//変更履歴
-println(captions.changeLog, 0);
-println(Array(self.strLength(captions.changeLog) + 1).join("="), 0);
+//changeLog
+println(captions["changeLog"], 0);
+println(Array(self.strLength(captions["changeLog"]) + 1).join("="), 0);
 
 ?>

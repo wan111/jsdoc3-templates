@@ -36,6 +36,7 @@ var template = require('jsdoc/template'),
 		"mixins": "Mixins:",
 		"modules": "Modules:",
 		"namespaces": "Namespaces:",
+		"typedefs": "Type Definitions:",
 		"properties": "Properties:",
 		"members": "Members:",
 		"methods": "Methods:",
@@ -133,10 +134,12 @@ exports.publish = function(taffyData, opts, tutorials) {
 				obj.members = db({kind: ['member', 'constant'], memberof: obj.longname}).get();
 				obj.methods = db({kind: 'function', memberof: obj.longname}).get();
 				obj.events = db({kind: 'event', memberof: obj.longname}).get();
+				obj.typedefs = db({kind: 'typedef', memberof: obj.longname}).get();
 				
 				obj.members.forEach(addAttribs);
 				obj.methods.forEach(addAttribs);
 				obj.events.forEach(addAttribs);
+				obj.typedefs.forEach(addAttribs);
 			}
 		}
 	}

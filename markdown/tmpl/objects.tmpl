@@ -73,6 +73,9 @@ var self = this,
 	details = "";
 
 if(kind == 'globals'){
+	var typedefs = data.filter(function(obj){
+		return obj.kind == 'typedef';
+	});
 	var members = data.filter(function(obj){
 		return obj.kind == 'member' || obj.kind == 'constant';
 	});
@@ -82,6 +85,18 @@ if(kind == 'globals'){
 	var events = data.filter(function(obj){
 		return obj.kind == 'event';
 	});
+
+	if(typedefs.length){
+		print("\n");
+		println("* " + captions["typedefs"], indent);
+		typedefs.forEach(function(typedef){
+			if(typedef.type && typedef.type.names && typedef.type.names.length && /function/i.test(typedef.type.names)){
+				print(self.partial("func.tmpl", {indent: indent + 1, data: typedef}));
+			}else{
+				print(self.partial("member.tmpl", {indent: indent + 1, data: typedef}));
+			}
+		});
+	}
 	if(members.length){
 		print("\n");
 		println("* " + captions["members"], indent);
@@ -111,6 +126,18 @@ if(kind == 'globals'){
 		if(index) print("\n");
 		println(obj.name, indent);
 		println(Array(self.strLength(obj.name) + 1).join("-"), indent);
+
+		if(obj.typedefs && obj.typedefs.length){
+			print("\n");
+			println("* " + captions["typedefs"] + "  ", indent);
+			obj.typedefs.forEach(function(typedef){
+				if(typedef.type && typedef.type.names && typedef.type.names.length && /function/i.test(typedef.type.names)){
+					print(self.partial("func.tmpl", {indent: indent + 1, data: typedef}));
+				}else{
+					print(self.partial("member.tmpl", {indent: indent + 1, data: typedef}));
+				}
+			});
+		}
 
 		if(obj.kind == 'class'){
 			print("\n");
